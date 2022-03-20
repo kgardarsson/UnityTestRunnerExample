@@ -16,12 +16,13 @@ namespace Test {
             var testObj = new GameObject();
             AudioSource audio = testObj.AddComponent<AudioSource>();
             audio.clip = LoadClip("Audio/ShortDrumLoop");
+            float leewayDuration = .1f;
             
             // Action
             audio.loop = true;
             audio.Play();
 
-            yield return new WaitForSeconds(audio.clip.length + .1f);
+            yield return new WaitForSeconds(audio.clip.length + leewayDuration);
 
             // Test whether audio playes after its duration
             Assert.AreEqual(true, audio.isPlaying);
@@ -44,10 +45,9 @@ namespace Test {
             audio.clip = LoadClip("Audio/MusicLoop");
             int numSamples = 256; // Must be a power of 2
             int numChecks = 3; // number of samples to test
-            float volume = .6f;
+            audio.volume = .6f;
 
             // Action
-            audio.volume = volume;
             audio.loop = true;
             audio.Play();
 
