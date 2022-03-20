@@ -37,6 +37,7 @@ public class audio_source {
         // Setup
         var testObj = new GameObject();
         AudioSource audio = testObj.AddComponent<AudioSource>();
+        AudioListener listener = testObj.AddComponent<AudioListener>();
         audio.clip = Resources.Load<AudioClip>("Audio/MusicLoop");
         int numSamples = 256; // Must be a power of 2
         int numChecks = 3; // number of samples to test
