@@ -12,7 +12,7 @@ namespace Test {
         public IEnumerator ExposedParameter_WhenSet_WillHaveTargetVolume() {
             
             // Arrange
-            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            AudioMixer mixer = LoadMixer("Audio/AudioMixer");
             float expectedValue = -3;
             float actualValue;
 
@@ -33,7 +33,7 @@ namespace Test {
         public IEnumerator Snapshot_WhenTransistionedTo_WillReachTargetVolume() {
             
             // Arrange
-            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            AudioMixer mixer = LoadMixer("Audio/AudioMixer");
             AudioMixerSnapshot snapshot = mixer.FindSnapshot("Underwater");
             float transitionTime = 1;
             float expectedValue = -3;
@@ -63,7 +63,7 @@ namespace Test {
         public IEnumerator ExposedParameter_WhenSetTooHigh_SetsToMaximum() {
             
             // Arrange
-            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            AudioMixer mixer = LoadMixer("Audio/AudioMixer");
             float setVolumeTo = 30;
             float maxVol = 20;
             float actualValue;
@@ -82,7 +82,7 @@ namespace Test {
         public IEnumerator ExposedParameter_WhenSetTooLow_SetsToMinimum() {
             
             // Arrange
-            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            AudioMixer mixer = LoadMixer("Audio/AudioMixer");
             float setVolumeTo = -90;
             float minVol = -80;
             float actualValue;
@@ -95,6 +95,13 @@ namespace Test {
             Assert.AreEqual(minVol, actualValue);
 
             yield return null;
+        }
+
+        AudioMixer LoadMixer(string path) {
+            AudioMixer mixer = Resources.Load<AudioMixer>(path);
+            if (mixer == null)
+                throw new System.NullReferenceException("No mixer exists at Resources/" + path);
+            return mixer;
         }
     }
 }

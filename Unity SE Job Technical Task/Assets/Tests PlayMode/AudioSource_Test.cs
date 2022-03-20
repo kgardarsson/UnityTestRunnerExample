@@ -15,7 +15,7 @@ namespace Test {
             // Setup
             var testObj = new GameObject();
             AudioSource audio = testObj.AddComponent<AudioSource>();
-            audio.clip = Resources.Load<AudioClip>("Audio/ShortDrumLoop");
+            audio.clip = LoadClip("Audio/ShortDrumLoop");
             
             // Action
             audio.loop = true;
@@ -41,7 +41,7 @@ namespace Test {
             var testObj = new GameObject();
             AudioSource audio = testObj.AddComponent<AudioSource>();
             AudioListener listener = testObj.AddComponent<AudioListener>();
-            audio.clip = Resources.Load<AudioClip>("Audio/MusicLoop");
+            audio.clip = LoadClip("Audio/MusicLoop");
             int numSamples = 256; // Must be a power of 2
             int numChecks = 3; // number of samples to test
             float volume = .6f;
@@ -76,6 +76,13 @@ namespace Test {
 
             yield return null;
 
+        }
+
+        AudioClip LoadClip(string path) {
+            AudioClip clip = Resources.Load<AudioClip>(path);
+            if (clip == null)
+                throw new System.NullReferenceException("No clip exists at Resources/" + path);
+            return clip;
         }
     }
 }
