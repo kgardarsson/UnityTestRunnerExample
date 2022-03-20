@@ -11,15 +11,15 @@ namespace Test {
         [UnityTest]
         public IEnumerator ExposedParameter_WhenSet_WillHaveTargetVolume() {
             
-            // Setup
+            // Arrange
             AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
             float expectedValue = -3;
             float actualValue;
 
-            // Action
+            // Act
             mixer.SetFloat("MusicVol", expectedValue);
 
-            // Test whether expected and actual values are the same
+            // Assert
             mixer.GetFloat("MusicVol", out actualValue);
             Assert.AreEqual(expectedValue, actualValue);
 
@@ -32,7 +32,7 @@ namespace Test {
         [UnityTest]
         public IEnumerator Snapshot_WhenTransistionedTo_WillReachTargetVolume() {
             
-            // Setup
+            // Arrange
             AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
             AudioMixerSnapshot snapshot = mixer.FindSnapshot("Underwater");
             float transitionTime = 1;
@@ -40,13 +40,14 @@ namespace Test {
             float actualValue;
             float acceptedError = .05f;
 
-            // Action
+            // Act
             snapshot.TransitionTo(transitionTime);
 
             yield return new WaitForSeconds(transitionTime);
 
             mixer.GetFloat("MasterVol", out actualValue); // The only way I could find to access volume parameter was to expose it. The snapshots will run as long as the exposed value is not set.
 
+            // Assert
             // Test whether expected and actual values are more or less the same
             Assert.AreEqual(expectedValue, actualValue, acceptedError);
 
@@ -54,6 +55,46 @@ namespace Test {
 
             // Code for my private purposes to see the change in mixer UI
             // yield return new WaitForSeconds(3f);
+        }
+
+        //*** EXTRA TESTS ***//
+
+        [UnityTest]
+        public IEnumerator ExposedParameter_WhenSetTooHigh_SetsToMaximum() {
+            
+            // Arrange
+            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            float setVolumeTo = 30;
+            float maxVol = 20;
+            float actualValue;
+
+            // Act
+            mixer.SetFloat("MusicVol", setVolumeTo);
+
+            // Assert
+            mixer.GetFloat("MusicVol", out actualValue);
+            Assert.AreEqual(maxVol, actualValue);
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator ExposedParameter_WhenSetTooLow_SetsToMinimum() {
+            
+            // Arrange
+            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/AudioMixer");
+            float setVolumeTo = -90;
+            float minVol = -80;
+            float actualValue;
+
+            // Act
+            mixer.SetFloat("MusicVol", setVolumeTo);
+
+            // Assert
+            mixer.GetFloat("MusicVol", out actualValue);
+            Assert.AreEqual(minVol, actualValue);
+
+            yield return null;
         }
     }
 }
